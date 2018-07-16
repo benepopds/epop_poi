@@ -19,6 +19,13 @@
   
 ## 기능  
   
+  
+  
+  
+![Alt text](img/main.png)  
+  
+  
+  
 상점 이름에 있는 pair 를 보고 카테고리를 정제할 수 있다.  
 각 pair 별로 가장 많은 CATE, CATE1 순서로 출력하여 보여준다.  
 default 로 가장 많은 수의 CATE, CATE1 값이 MODIFY 버튼 옆에 적혀잇지만  
