@@ -11,6 +11,7 @@ from sklearn.cluster import DBSCAN
 engine = create_engine("mysql+pymysql://eums:eums00!q@192.168.0.50:3306/eums?charset=utf8mb4", encoding = 'utf8' ,
                    pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
 
+# 아이디 목록 리스트 만드는 과정
 # id_query = """select EPOPCON_ID
 # from MEUMS_COMP_REVISIT
 # where CNT>300
@@ -22,6 +23,7 @@ engine = create_engine("mysql+pymysql://eums:eums00!q@192.168.0.50:3306/eums?cha
 
 id_list = pd.read_pickle('id')['EPOPCON_ID']
 
+# 아웃라이어 비율 계산
 all_size, out_size = [1, 1]
 app = dash.Dash()
 
@@ -60,13 +62,12 @@ app.layout = html.Div([
 @app.callback(
     Output('feature-graphic', 'figure'),
     [Input('submit-button', 'n_clicks')],
-    [State('select_id', 'value'),
-     State('select_time', 'value'),
-     State('select_term', 'value')])
+    [State('select_id', 'value'),   # id 선택
+     State('select_time', 'value'), # 기간 선택(최근 1주일~1년)
+     State('select_term', 'value')])    # 시간대 선택(낮, 밤)
 def update_graph(n_clicks, select_id, select_time, select_term):
     global all_size, out_size
-    time = ''
-    date = ''
+
     if select_time == 'night': time = 'not'
 
     if select_term == 'week' : date=' and DEAL_DT > date_add(now(), interval -7 day)'
@@ -99,8 +100,8 @@ def update_graph(n_clicks, select_id, select_time, select_term):
                     'height': 1000
                 }}
 
-    model = DBSCAN(eps=0.2, min_samples=max(3, len(feature) // 100))
-    print(len(feature) // 100)
+    model = DBSCAN(eps=0.2, min_samples=max(3, len(feature) // 100))       # dpscan의 Epsilon은 임의의 상수로 지정하였고, minPts는 최소 3인 방문기록에 비례한 값을 사용
+
     predict = pd.DataFrame(model.fit_predict(feature))
     predict.columns = ['predict']
     r = pd.concat([feature, predict], axis=1)

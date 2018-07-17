@@ -1,25 +1,14 @@
-# Perform imports here:
-import numpy as np
+
 import pandas as pd
-import plotly.offline as pyo
 import plotly.graph_objs as go
-import matplotlib.pyplot as plt
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-import datetime
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
 
 from sqlalchemy import create_engine
 from dash.dependencies import Input, Output, State
-import math
 from sklearn.cluster import KMeans
 from sklearn import mixture
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pickle
-# Create a pandas DataFrame from 2010YumaAZ.csv
 
 engine = create_engine("mysql+pymysql://eums:eums00!q@192.168.0.50:3306/eums?charset=utf8mb4", encoding = 'utf8' ,
                    pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
@@ -34,7 +23,7 @@ engine = create_engine("mysql+pymysql://eums:eums00!q@192.168.0.50:3306/eums?cha
 #
 
 id_list = pd.read_pickle('id')['EPOPCON_ID']
-data = pd.read_pickle('result_all')[['EPOPCON_ID', 'LATITUDE', 'LONGITUDE']]
+data = pd.read_pickle('result_all')[['EPOPCON_ID', 'LATITUDE', 'LONGITUDE']]  #result_all : 아웃라이어를 제거한 좌표들로만 구성된 테이블
 all_size, out_size = [1, 1]
 app = dash.Dash()
 
@@ -64,9 +53,9 @@ app.layout = html.Div([
     [State('select_id', 'value')])
 def update_graph(n_clicks, select_id):
     global all_size, out_size
-    time = ''
-    date = ''
 
+    # 이 경우 result_all에서 가져온 data를 사용하면 아웃라이어를 제거한 경우로 진행할 수 있고
+    # 쿼리를 날려서 가져오는 경우 원본 그대로 진행할 수 있다.
     feature = data[data.EPOPCON_ID==select_id].reset_index()[['LATITUDE', 'LONGITUDE']]
     if len(feature)==0:
         return {
@@ -87,7 +76,7 @@ def update_graph(n_clicks, select_id):
 
     all_size = len(feature)
 
-    model = KMeans(n_clusters=3)
+    model = KMeans(n_clusters=3)    #클러스터 개수를 정한다.
     model.fit(feature)
 
     predict = pd.DataFrame(model.predict(feature))
