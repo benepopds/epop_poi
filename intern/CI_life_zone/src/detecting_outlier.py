@@ -18,8 +18,6 @@ engine = create_engine("mysql+pymysql://eums:eums00!q@192.168.0.50:3306/eums?cha
 
 id_list = pd.read_pickle('id')['EPOPCON_ID']
 
-all_size, out_size = [1, 1]
-
 result_list=[]
 it=0
 for id in id_list:
@@ -34,7 +32,7 @@ for id in id_list:
     test = test.dropna(axis = 0)
     feature = test[['LONGITUDE', 'LATITUDE']]
 
-    model = DBSCAN(eps=0.2, min_samples=max(3, len(feature) // 100))
+    model = DBSCAN(eps=0.2, min_samples=max(3, len(feature) // 100))    #dbscan알고리즘을 이용해서 걸러지는 outlier를 제거한 데이터를 저장한다.
     predict = pd.DataFrame(model.fit_predict(feature))
     predict.columns = ['predict']
     if len(predict.predict)>=3:
