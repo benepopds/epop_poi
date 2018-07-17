@@ -19,7 +19,7 @@ def process(df, time_str, week_part):
     for site in site_list:
         calc_x_time_y_amount(df, site, time_str, week_part)
 
-
+#시간별 크롤량 계산하는 함수
 def calc_x_time_y_amount(df, site_str, time_str, week_part):
     try :  
         site_df = df[df['site']== site_str]
@@ -50,12 +50,13 @@ def site_to_db(site_df, site_name, week_part, time_str):
         logger.info(query)
         with epopcon_engine.connect() as con:
             con.execute(query)
-    
+
+# 몇번째 주인지를 계산하는 함수. Presto 에서 Week_part 로 접근하기 위해서 필요함
 def calc_nth_weeks(day):
     return (day.isocalendar()[1] + 1 ) if (day.isocalendar()[2] == 7) else (day.isocalendar()[1])
 
 
-
+# 메인함수. DAG 를 쓰기 위해 main 부분을 함수로 구현
 def my_main():
 
     epopcon_engine = create_engine("mysql+pymysql://eums:eums00!q@192.168.0.118:3306/eums-poi", pool_size=20, pool_recycle=3600,

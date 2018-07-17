@@ -73,7 +73,7 @@ app.layout = html.Div([
     
    
 ])
-
+# 어떤 DB인지에 따라 능동적으로 Dropdown 변경해줄 수 있는 코드 (현재는 하나의 DB라서 의미 없는 코드)
 @app.callback(
     Output('company_type', 'options'),
     [Input('column_type', 'value')]
@@ -82,6 +82,7 @@ app.layout = html.Div([
 def set_company_type(select_column):
     return [ {'label' : i , 'value' : i} for i in all_options[select_column]]
 
+
 @app.callback(
     Output('company_type', 'value'),
     [Input('company_type', 'options')]
@@ -89,7 +90,7 @@ def set_company_type(select_column):
 def set_company_value(avail_options):
     return avail_options[0]['value']
 
-
+# str type casting to datetime
 def date_str_to_datetime(date):
     date_list = date.split('-')
     return datetime.datetime(int(date_list[0]),int(date_list[1]),int(date_list[2]))
@@ -245,7 +246,7 @@ def update_markdown(n_clicks, column_type, startdate_input, enddate_input, compa
 
 
 if __name__ == '__main__':
-
+    # 각 사이트별 ID값들을 가지고 있는 PQ
     a = pd.read_parquet("colt_item_site_list.PQ")
 
     st11_list = a[a['SITE_NAME']=='11st'].ID
