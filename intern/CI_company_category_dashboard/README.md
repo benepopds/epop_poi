@@ -1,5 +1,8 @@
 # CI TEMP_COMPANY TABLE CATEGORY DASHBOARD  
   
+## Link  
+  
+http://192.168.0.83:8051/
   
 ## 사용하는 DB    
   
