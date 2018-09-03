@@ -1,0 +1,86 @@
+133.186.159.246 
+ -8080: airflow 1.8 service server
+ -9095: jupyter notebook for cb
+  -aws3 dask connected with credential
+
+
+133.186.146.49
+ -8080: airflow 1.9 development server
+ -http://133.186.146.49:8080/admin/
+ -ep-af / ep-af00!q
+ -http://133.186.146.68:9090/lab
+ -get token from jupyter: system("jupyter" "notebook" "list")
+
+133.186.143.65
+ -wspider: FILA, Lotte, OliveYoung, HMall, GSSHOP
+engine = create_engine("mysql+pymysql://wspider:wspider00!q@133.186.143.65:3306/wspider?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+-133.186.159.246:9095)
+engine = create_engine("mysql+pymysql://eums:eums00!q@121.134.237.63:11000/wspider", pool_size=20, pool_recycle=3600,connect_args={'connect_timeout': 1000000})
+
+
+133.186.134.155
+ -LF-bigdata
+engine = create_engine("mysql+pymysql://wspidermr:wspidermr00!q@133.186.134.155:3306/beauty-bigdata?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+
+
+192.168.0.50
+ -EUMS development server
+engine = create_engine("mysql+pymysql://eums:eums00!q@192.168.0.50:3306/wspider_temp?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+-146.68주피터접근)
+wspider_temp_engine = create_engine("mysql+pymysql://eums:eums00!q@121.134.237.63:11000/wspider_temp", pool_size=20, pool_recycle=3600, connect_args={'connect_timeout': 1000000})
+
+
+
+
+133.186.143.151
+ -EUMS service serve
+
+
+133.186.146.142
+ -HANA project
+ -like development server
+engine = create_engine("mysql+pymysql://eums:eums00!q@133.186.146.142:3306/eums-poi?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+-133.186.159.246:9095)
+engine = engine = create_engine("mysql+pymysql://eums:eums00!q@192.168.0.118:3306/eums-cj-1-business?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+
+
+133.186.135.222
+ -CJ Serevice server
+engine = create_engine("mysql+pymysql://eumsread:eumsread00!q@133.186.135.222:13306/eums-business?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+
+
+133.186.135.21
+ -JAJUWA Service server
+engine = create_engine("mysql+pymysql://eumsread:eumsread00!q@133.186.135.21:3306/eums?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+
+
+211.253.24.64
+ -Coupang
+engine = create_engine("mysql+pymysql://wspider:wspider00!q@211.253.24.64:3306/wspider?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+-133.186.159.246)
+engine = create_engine("mysql+pymysql://wspider:wspider00!q@211.253.24.64:3306/wspider", pool_size=20, pool_recycle=3600,connect_args={'connect_timeout': 1000000})
+
+13.124.149.212
+ -SSG, H&M, 11st
+engine = create_engine("mysql+pymysql://wspider:wspider00!q@13.124.149.212:3306/wspider?charset=utf8mb4", encoding = 'utf8', pool_size=20,pool_recycle=3600,connect_args={'connect_timeout':1000000} )
+
+
+
+query = """select * from MEUMS_ """
+pd.read_sql_query(query,engine)
+
+
+
+
+
+
+
+PRESTO!
+
+from pyhive import presto
+engine_presto = presto.connect('133.186.168.10')
+hql_ivt = """
+SELECT 
+FROM inventory_part
+"""
+pd.read_sql_query(hql_ivt, engine_presto)
