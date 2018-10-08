@@ -8,7 +8,7 @@ import math
 from joblib import Parallel
 import joblib
 
-
+engine_presto = presto.connect('133.186.168.10')
 
 #PARITION FORMULA
 ITEM_PART= np.array((target_item_ids // 10000) + 1)
