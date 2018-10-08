@@ -28,8 +28,6 @@ for part, ids in dic.items():
 #for multi-processing
 def retrieve_from_presto(item_part, select_ids):
     select_ids = tuple(select_ids)
-    
-    if np.random.rand(1)>0.30: return
         
     if len(select_ids) > 1:
         hql_ivt = """
