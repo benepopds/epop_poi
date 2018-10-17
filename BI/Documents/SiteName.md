@@ -2,7 +2,7 @@
 * inventory_part의 경우
 	
  site_name | count
- ----------|
+ ----------|---
 nbkorea|2495
 OLIVEYOUNG|9461
 GSSHOP|4352178
