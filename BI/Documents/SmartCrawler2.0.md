@@ -18,7 +18,11 @@
 * 크롤이 종료된 아이템을 EXECUTE_PLAN에 넣으면 좋지 않다
   * 잘못되면 크롤링 전체가 fail될 수 있다. 이를 검증하기 위해 BS_URL의 SELL_END_YN 칼럼을 참조하지만 신뢰도 검토중.
   
+  
+  
 * * *
+
+
 
 ## SC 2.0 모델 로직
 
@@ -40,7 +44,16 @@
   * INPUT: target_items, BS_URL
   * OUTPUTL: target_item_ids
 
-### 3. 일주일 단위로 Feature를 생성
+### 4. 재고량 가져오기
+  * pulling_items: 파티션 별로 최근 4주간의 재고량을 가져와 저장한다.
+  * 재고량은 파티션 별로 reposit/SC_stocks에 날짜(연월일)와 함께 피클로 저장된다.
+    * ex) reposit/SC_stocks/20181101_123.pk
+  * 저장된 디렉토리를 반환한다.
+  * INPUT: target_item_ids
+  * OUTPUT: drt
+
+### 5. 재고량으로부터  Feature를 생성한다.
+* 
   * CRAWL: 
   * CHANGE
   * CHANGED_DAY
