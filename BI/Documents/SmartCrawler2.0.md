@@ -59,11 +59,11 @@
   * 내부에서 호출하는 함수들은 다음과 같다
     * modify_1sec: 아이템 별로 크롤 간격에 대한 전처리를 수행한다. HowToCrawl 3번 참조
     * get_weighed_r_from_df: 아이템 하나에 대한 R-score를 구한다. 주별로 가중치가 1/e로 감소한다.
-    * r_byweek: 주별로 R_score를 구한다. 
-      -period는 단위기간을 가리킨다.
-      -n=len(resampled)로 설정할 경우 관측 횟수가 적은 경우에 편향이 생길 수 있다.
-      -weight는 경험적으로 주어졌다. 현재의 weight=1.5를 토대로, R-score는 1.5가 적절하다고 보인다.
-    * caclulate_r: 연속성 수정과 함께 r값을 계산한다.
+    * r_byweek: 주별로 R_score를 구한다.  
+      -period는 단위기간을 가리킨다.  
+      -n=len(resampled)로 설정할 경우 관측 횟수가 적은 경우에 편향이 생길 수 있다.  
+      -weight는 경험적으로 주어졌다. 현재의 weight=1.5를 토대로, R-score는 1.5가 적절하다고 보인다.  
+    * caclulate_r: 연속성 수정과 함께 r값을 계산한다.  
   * 생성한 feature는 다음과 같다.
     * CRAWL: 크롤한 횟수. modify_1sec가 없으면 과대추정된다.
     * CHANGE: 크롤했을 때 재고가 변화한 횟수. CRAWL보다 항상 작거나 같다.
