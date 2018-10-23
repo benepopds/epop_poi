@@ -17,11 +17,11 @@
 ### 3. 부차적인 문제
 * 크롤이 종료된 아이템을 EXECUTE_PLAN에 넣으면 좋지 않다
   * 잘못되면 크롤링 전체가 fail될 수 있다. 이를 검증하기 위해 BS_URL의 SELL_END_YN 칼럼을 참조하지만 신뢰도 검토중.
-  
-  
-  
-* * *
 
+
+<br><br>
+- - -
+<br><br>
 
 
 ## SC 2.0 모델 로직
@@ -52,12 +52,23 @@
   * INPUT: target_item_ids
   * OUTPUT: drt
 
-### 5. 재고량으로부터  Feature를 생성한다.
-* 
-  * CRAWL: 
-  * CHANGE
-  * CHANGED_DAY
-  * PERIOD
-  * CATCH_RATE
-  * LAST_STOCK_IS_ZERO
-  * N_STOCK
+### 5. 재고량으로부터 Feature를 생성한다.
+  * assecing: 파티션별로 재고량을 읽어 feature들을 생성한 뒤 저장한다.
+  * feature는 reposit/SC_feature에 날짜(연월일)과 함께 피클로 저장된다.
+  * 내부에서 호출하는 함수들은 다음과 같다
+    * modify_1sec: 아이템 별로 크롤 간격에 대한 전처리를 수행한다. HowToCrawl 3번 참조
+    * get_weighed_r_from_df: 아이템 하나에 대한 R-score를 구한다. 주별로 가중치가 1/e로 감소한다.
+    * r_byweek: 주별로 R_score를 구한다. 
+      -period는 단위기간을 가리킨다.
+      -n=len(resampled)로 설정할 경우 관측 횟수가 적은 경우에 편향이 생길 수 있다.
+      -weight는 경험적으로 주어졌다. 현재의 weight=1.5를 토대로, R-score는 1.5가 적절하다고 보인다.
+    * caclulate_r: 연속성 수정과 함께 r값을 계산한다.
+  * 생성한 feature는 다음과 같다.
+    * CRAWL: 크롤한 횟수. modify_1sec가 없으면 과대추정된다.
+    * CHANGE: 크롤했을 때 재고가 변화한 횟수. CRAWL보다 항상 작거나 같다.
+    * CHANGED_DAY: 크롤했을 때 재고가 변화한 날짜. CHANGE보다 항상 작거나 같다.
+    * PERIOD: 크롤해온 기간. 중간에 안한 기간을 참고하지 않기 때문에 과다추정될 수 있다.
+    * CATCH_RATE: CHANGE/CRAWL. 크롤횟수 대비 재고량변화횟수이다.
+    * LAST_STOCK_IS_ZERO: 가장 마지막에 크롤됐을 때의 재고량.
+    * N_STOCK: STOCK의 가짓수이다.
+  * INPUT: 
