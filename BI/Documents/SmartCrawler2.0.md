@@ -50,11 +50,12 @@
     * ex) reposit/SC_stocks/20181101_123.pk
   * 저장된 디렉토리를 반환한다.
   * INPUT: target_item_ids
-  * OUTPUT: drt
+  * OUTPUT: stock_direc
 
 ### 5. 재고량으로부터 Feature를 생성한다.
   * assecing: 파티션별로 재고량을 읽어 feature들을 생성한 뒤 저장한다.
-  * feature는 reposit/SC_feature에 날짜(연월일)과 함께 피클로 저장된다.
+  * feature는 reposit/SC_features에 날짜(연월일)과 함께 피클로 저장된다.
+    * ex) reposit/SC_stocks/20181101_123.pk
   * 내부에서 호출하는 함수들은 다음과 같다
     * modify_1sec: 아이템 별로 크롤 간격에 대한 전처리를 수행한다. HowToCrawl 3번 참조
     * get_weighed_r_from_df: 아이템 하나에 대한 R-score를 구한다. 주별로 가중치가 1/e로 감소한다.
@@ -71,4 +72,5 @@
     * CATCH_RATE: CHANGE/CRAWL. 크롤횟수 대비 재고량변화횟수이다.
     * LAST_STOCK_IS_ZERO: 가장 마지막에 크롤됐을 때의 재고량.
     * N_STOCK: STOCK의 가짓수이다.
-  * INPUT: 
+  * INPUT: stock_direc
+  * OUTPUT: feature_direc
