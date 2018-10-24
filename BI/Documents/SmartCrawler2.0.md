@@ -1,4 +1,4 @@
-## Smart Crawler의 이해
+## I. Smart Crawler의 이해
 
 ###  1. Smart Crawler가 진단하려는 것
 * '현재보다 더 자주' 크롤되어야 하는 것
@@ -24,7 +24,7 @@
 <br><br>
 
 
-## SC 2.0 모델 로직
+## II. SC 2.0 모델 로직
 
 ### 1. 현재 크롤 중으로 추정되는 ITEM들의 ID 가져오기 
   * retrieve_ids: 대상 사이트(ex. GSSHOP)로부터 최근 1주일간 업데이트(upt_dt)된 ID 목록을 가져온다.
@@ -38,6 +38,7 @@
   * SELL_END_YN을 완전히 신뢰할 수 없기 때문에 1에서 upt_dt를 참조하였다.
   * INPUT: None
   * OUTPUT: BS_URL
+  * 소요시간: 2분 미만
   
 ### 3. 판매종료된 상품 필터링
   * SELL_FILTER: ITEM_NUM을 토대로 SELL_END_YN이 0인 ITEM_ID만을 남겨 반환한다.
@@ -51,6 +52,7 @@
   * 저장된 디렉토리를 반환한다.
   * INPUT: target_item_ids
   * OUTPUT: stock_direc
+  * 
 
 ### 5. 재고량으로부터 Feature를 생성한다.
   * assecing: 파티션별로 재고량을 읽어 feature들을 생성한 뒤 저장한다.
@@ -74,3 +76,20 @@
     * N_STOCK: STOCK의 가짓수이다.
   * INPUT: stock_direc
   * OUTPUT: feature_direc
+  * 소요시간: 45분 with 8 cores
+  
+### 6. 더 크롤해야 할 아이템 예측
+  * predict_items: 생성된 feature로부터 더 크롤해야 할 ITEM 예측
+  * First layer: 다음의 모델들을 활용해 meta predictor 생성
+    * Ada_Logit: Logistic regression
+    * Ada_Tree: Tree
+    * LDA: Linear discriminent analysis
+    * RF: Random forest
+  * Second layer: meta predictor로부터 더 크롤할 ITEM들 classify하여 저장
+  * INPUT: features
+  * OUTPUT: 
+<br><br>
+- - - 
+<br><br>
+
+## III. 예측 모델 생성
