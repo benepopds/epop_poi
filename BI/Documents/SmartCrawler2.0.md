@@ -1,4 +1,4 @@
-## I. Smart Crawler의 이해
+# I. Smart Crawler의 이해
 
 ###  1. Smart Crawler가 진단하려는 것
 * '현재보다 더 자주' 크롤되어야 하는 것
@@ -24,7 +24,9 @@
 <br><br>
 
 
-## II. SC 2.0 모델 로직
+# II. SC 2.0 모델 로직
+
+## Step 1
 
 ### 1. 현재 크롤 중으로 추정되는 ITEM들의 ID 가져오기 
   * retrieve_ids: 대상 사이트(ex. GSSHOP)로부터 최근 1주일간 업데이트(upt_dt)된 ID 목록을 가져온다.
@@ -43,9 +45,11 @@
 ### 3. 판매종료된 상품 필터링
   * SELL_FILTER: ITEM_NUM을 토대로 SELL_END_YN이 0인 ITEM_ID만을 남겨 반환한다.
   * INPUT: target_items, BS_URL
-  * OUTPUTL: target_item_ids
+  * OUTPUTL: target_item_ids  
+  
+## Step2
 
-### 4. 재고량 가져오기
+### 1. 재고량 가져오기
   * pulling_items: 파티션 별로 최근 4주간의 재고량을 가져와 저장한다.
   * 재고량은 파티션 별로 reposit/SC_stocks에 날짜(연월일)와 함께 피클로 저장된다.
     * ex) reposit/SC_stocks/20181101_123.pk
@@ -54,7 +58,7 @@
   * OUTPUT: stock_direc
   * 
 
-### 5. 재고량으로부터 Feature를 생성한다.
+### 2. 재고량으로부터 Feature를 생성한다.
   * assecing: 파티션별로 재고량을 읽어 feature들을 생성한 뒤 저장한다.
   * feature는 reposit/SC_features에 날짜(연월일)과 함께 피클로 저장된다.
     * ex) reposit/SC_stocks/20181101_123.pk
@@ -78,7 +82,7 @@
   * OUTPUT: feature_direc
   * 소요시간: 45분 with 8 cores
   
-### 6. 더 크롤해야 할 아이템 예측
+### 3. 더 크롤해야 할 아이템 예측
   * predict_items: 생성된 feature로부터 더 크롤해야 할 ITEM 예측
   * First layer: 다음의 모델들을 활용해 meta predictor 생성
     * Ada_Logit: Logistic regression
