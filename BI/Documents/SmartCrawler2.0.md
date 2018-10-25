@@ -33,14 +33,14 @@
   * ITEM_NUM을 가져오는 이유는 BS_URL 테이블과의 join을 위해서이다.
   * INPUT: None
   * OUTPUT: target_items
-  * 소요시간: 10초 미만
+ 
   
 ### 2. 판매종료되지 않은 ITEM들의 ITEM_NUM 가져오기
   * get_BS_URL_ids: BASE_URL 테이블의 SELL_END_YN을 토대로 판매종료되지 않은 상품의 ITEM_NUM을 가져온다.
   * SELL_END_YN을 완전히 신뢰할 수 없기 때문에 1에서 upt_dt를 참조하였다.
   * INPUT: None
   * OUTPUT: BS_URL
-  * 소요시간: 2분 미만
+  * 소요시간: 약 10분
   
 ### 3. 판매종료된 상품 필터링
   * SELL_FILTER: ITEM_NUM을 토대로 SELL_END_YN이 0인 ITEM_ID만을 남겨 반환한다.
