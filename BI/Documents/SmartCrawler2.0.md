@@ -49,19 +49,24 @@
   
 ## Step2
 
-### 1. 재고량 가져오기
-  * pulling_items: 파티션 별로 최근 4주간의 재고량을 가져와 저장한다.
-  * 재고량은 파티션 별로 reposit/SC_stocks에 날짜(연월일)와 함께 피클로 저장된다.
-    * ex) reposit/SC_stocks/20181101_123.pk
-  * 저장된 디렉토리를 반환한다.
+### 1. 아이템 리스트 쪼개기
+  * make_dic: 아이템리스들을 각 파티션별로, 그리고 파티션 내에서도 1000개 단위로 쪼개 dictionary 형태로 반환한다.
+  * 파티션 단위로 쪼갰을 때는 하나의 chunk가 클 경우 bottleneck이 심각해질 수 있기 때문이다.
+  * STEP2의 이하 작업들은 여기서 쪼개진 CHUNK 단위로 진행된다. 
   * INPUT: target_item_ids
-  * OUTPUT: stock_direc
-  * 
+  * OUTPUT: dic
+  
+### 2. 주어진 CHUNK에서 ITEM별로 최근 4주간의 재고량을 가져온다.
+  * retrieve_from_presto: 파티션을 잘 이용해 가져온다.
+    * item_part는 item_id에 따른 파티션, select_ids는 CHUNK에 담긴 ITEM들의 id다.
+    * month 또한 partitioned columns이다.
+  * INPUT: item_part, select_ids, today, last_month
+  * OUTPUT: items_df
 
-### 2. 재고량으로부터 Feature를 생성한다.
+### 3. 재고량으로부터 Feature를 생성해 저장한다.
   * assecing: 파티션별로 재고량을 읽어 feature들을 생성한 뒤 저장한다.
-  * feature는 reposit/SC_features에 날짜(연월일)과 함께 피클로 저장된다.
-    * ex) reposit/SC_stocks/20181101_123.pk
+  * feature는 reposit/SmartCrawler/site_hive/Featuress에 피클로 저장된다.
+    * ex) /app/dev/airflow/reposit/SmartCrawler/GSSHOP/Features/123
   * 내부에서 호출하는 함수들은 다음과 같다
     * modify_1sec: 아이템 별로 크롤 간격에 대한 전처리를 수행한다. HowToCrawl 3번 참조
     * get_weighed_r_from_df: 아이템 하나에 대한 R-score를 구한다. 주별로 가중치가 1/e로 감소한다.
@@ -82,6 +87,9 @@
   * OUTPUT: feature_direc
   * 소요시간: 45분 with 8 cores
   
+
+## Step3
+
 ### 3. 더 크롤해야 할 아이템 예측
   * predict_items: 생성된 feature로부터 더 크롤해야 할 ITEM 예측
   * First layer: 다음의 모델들을 활용해 meta predictor 생성
