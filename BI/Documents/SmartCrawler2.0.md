@@ -83,15 +83,10 @@
     * CATCH_RATE: CHANGE/CRAWL. 크롤횟수 대비 재고량변화횟수이다.
     * LAST_STOCK_IS_ZERO: 가장 마지막에 크롤됐을 때의 재고량.
     * N_STOCK: STOCK의 가짓수이다.
-  * INPUT: stock_direc
-  * OUTPUT: feature_direc
-  * 소요시간: 45분 with 8 cores
-  
+  * INPUT: items_df, item_part
 
-## Step3
-
-### 3. 더 크롤해야 할 아이템 예측
-  * predict_items: 생성된 feature로부터 더 크롤해야 할 ITEM 예측
+### 4. 더 크롤해야 할 ITEM 예측
+  * predict_from_features: 생성된 feature로부터 더 크롤해야 할 ITEM을 예측하여 반환
   * First layer: 다음의 모델들을 활용해 meta predictor 생성
     * Ada_Logit: Logistic regression
     * Ada_Tree: Tree
@@ -99,7 +94,20 @@
     * RF: Random forest
   * Second layer: meta predictor로부터 더 크롤할 ITEM들 classify하여 저장
   * INPUT: features
-  * OUTPUT: 
+  * OUTPUT: predicted_ids
+
+### 5. 더 크롤할 ITEM 저장
+  * aggregating_features: 예측된 ITEM과 그 대조군을 종합하여 반환
+  * rest_ids: 현재 크롤이 진행되는 ITEM에서 더 크롤이 필요하다고 판단되지 않는 아이템들 중 일부를 임의추출
+  * predicted_id에는 SC=True, randomly sampled에는 SC=False로 마킹
+  * 총 5만개중 predictied_id를 채우고 나머지를 random sample로 채울 예정
+    * 10/30 현재 GSSHOP의 크롤이 원활히 진행되고 있지 않기 때문에 predicted_id의 개수만큼만 random sample할 예정
+  * EXECUTE_PLAN에 넣기 위해 ITEM_NUM을 붙여서 진행
+  * 최종적으로 ITEM들은 reposit/SmartCrawler/site_hive/CrawledItems에 날짜와 함께 피클로 박제된다.
+
+## 6. 임시 파일 제거
+  * feature들을 모두 제거
+  
 <br><br>
 - - - 
 <br><br>
