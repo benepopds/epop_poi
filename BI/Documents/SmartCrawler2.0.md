@@ -48,6 +48,7 @@
 ### 1. 현재 크롤 중으로 추정되는 ITEM들의 ID 가져오기 
   * retrieve_ids: 대상 사이트(ex. GSSHOP)로부터 최근 1주일간 업데이트(upt_dt)된 ID 목록을 가져온다.
   * ITEM_NUM을 가져오는 이유는 BS_URL 테이블과의 join을 위해서이다.
+  * 개발 때에는 이곳에 limit을 건다
   * INPUT: None
   * OUTPUT: target_items
  
@@ -57,7 +58,6 @@
   * SELL_END_YN을 완전히 신뢰할 수 없기 때문에 1에서 upt_dt를 참조하였다.
   * INPUT: None
   * OUTPUT: BS_URL
-  * 소요시간: 약 10분
   
 ### 3. 판매종료된 상품 필터링
   * SELL_FILTER: ITEM_NUM을 토대로 SELL_END_YN이 0인 ITEM_ID만을 남겨 반환한다.
@@ -71,7 +71,7 @@
 ## Step2
 
 ### 0. 파일 정리
-  * 해당 주차에 크롤 타겟이었던 ITEM ID들은 current로 마킹되어있다. 이 파일이 존재한다면 이름에서 current를 제거한다.
+  * organizing_files: 해당 주차에 크롤 타겟이었던 ITEM ID들은 current로 마킹되어있다. 이 파일이 존재한다면 이름에서 current를 제거한다.
 
 ### 1. 아이템 리스트 쪼개기
   * make_dic: 아이템리스들을 각 파티션별로, 그리고 파티션 내에서도 1000개 단위로 쪼개 dictionary 형태로 반환한다.
@@ -111,6 +111,7 @@
 
 ### 4. 더 크롤해야 할 ITEM 예측
   * predict_from_features: 생성된 feature로부터 더 크롤해야 할 ITEM을 예측하여 반환
+  * reporting을 위해 총 ITEM의 수(total_len)을 반환한다.
   * First layer: 다음의 모델들을 활용해 meta predictor 생성
     * Ada_Logit: Logistic regression
     * Ada_Tree: Tree
@@ -118,9 +119,14 @@
     * RF: Random forest
   * Second layer: meta predictor로부터 더 크롤할 ITEM들 classify하여 저장
   * INPUT: features
-  * OUTPUT: predicted_ids
+  * OUTPUT: total_len, predicted_ids
 
-### 5. 더 크롤할 ITEM 저장
+### 5. 결과 레포팅
+  * reporting_SC_predict_done: 프로세스가 진행된 사이트의 이름, 아이템의 수 등을 텔레그램으로 보내준다.
+  * INPUT: site_hive, predicted_len, total_len, randomly_len
+
+
+### 6. 더 크롤할 ITEM 저장
   * aggregating_features: 예측된 ITEM과 그 대조군을 종합하여 반환
   * rest_ids: 현재 크롤이 진행되는 ITEM에서 더 크롤이 필요하다고 판단되지 않는 아이템들 중 일부를 임의추출
   * predicted_id에는 SC=True, randomly sampled에는 SC=False로 마킹
@@ -130,7 +136,7 @@
   * 최종적으로 ITEM들은 reposit/SmartCrawler/site_hive/CrawledItems에 날짜와 함께 피클로 박제된다.
   * 아이템이 박제될 때는 current로 마킹이 되며, 크롤 기간이 끝난 아이템은 파일 이름에서 current만 
 
-## 6. 임시 파일 제거
+## 7. 임시 파일 제거
   * feature들을 모두 제거
   
 <br><br>
